@@ -994,3 +994,74 @@ textarea:focus {
     grid-template-columns: 1fr;
   }
 }
+/* ================================
+   MOBILE OPTIMIZATION
+================================ */
+
+@media (max-width: 768px) {
+
+  body{
+    padding:12px;
+  }
+
+  .app-container{
+    width:100%;
+    max-width:100%;
+    gap:16px;
+  }
+
+  .app-header{
+    padding:18px;
+    border-radius:20px;
+  }
+
+  .header-top{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:14px;
+  }
+
+  .header-actions{
+    width:100%;
+    justify-content:space-between;
+  }
+
+  .stats-grid{
+    grid-template-columns:1fr;
+  }
+
+  .task-form{
+    grid-template-columns:1fr;
+  }
+
+  .filters{
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  .filter-btn{
+    flex:1;
+    min-width:120px;
+  }
+
+  input,
+  textarea,
+  select,
+  button{
+    width:100%;
+  }
+
+  .task-card{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:12px;
+  }
+
+  .task-actions{
+    width:100%;
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+  }
+
+}
