@@ -134,9 +134,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  position: sticky;
-  top: 12px;
-  z-index: 50;
+
+  position: relative;
+
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   transition: border-color var(--transition-normal), background-color var(--transition-normal);
