@@ -1,32 +1,277 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Deishita's Day Planner</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyDay Planner - Personal Productivity Dashboard</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Deishita's Day Planner 📝</h1>
+  <div class="app-container">
+    
+    <!-- Toast Notification System -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
-    <form id="todo-form">
-      <input
-        type="text"
-        id="todo-input"
-        placeholder="Add something"
-        autocomplete="off"
-      />
-      <button type="submit">Add Task</button>
-    </form>
+    <!-- Header / Top Dashboard -->
+    <header class="app-header">
+      <div class="header-main">
+        <div class="brand">
+          <div class="brand-logo">
+            <i class="fa-solid fa-check-double"></i>
+          </div>
+          <div>
+            <h1 class="brand-title">MyDay</h1>
+            <p class="brand-subtitle" id="live-date">Loading date...</p>
+          </div>
+        </div>
 
-    <div class="filters">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="active">Active</button>
-      <button class="filter-btn" data-filter="completed">Completed</button>
+        <div class="header-actions">
+          <div class="clock-badge">
+            <i class="fa-regular fa-clock"></i>
+            <span id="live-clock">00:00:00 AM</span>
+          </div>
+          <button id="theme-toggle-btn" class="btn-icon" title="Toggle Theme (Dark/Light)">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Welcome Banner & Quick Stats -->
+      <div class="dashboard-banner">
+        <div class="greeting-box">
+          <h2 id="greeting-text">Good Morning</h2>
+          <p class="greeting-subtext">Here is your productivity breakdown for today.</p>
+        </div>
+
+        <div class="progress-section">
+          <div class="progress-info">
+            <span class="progress-label">Daily Progress</span>
+            <span id="progress-percentage" class="progress-percentage">0%</span>
+          </div>
+          <div class="progress-bar-track">
+            <div id="progress-bar-fill" class="progress-bar-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metrics Grid -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-icon total">
+            <i class="fa-solid fa-list-check"></i>
+          </div>
+          <div class="metric-content">
+            <span class="metric-value" id="stat-total">0</span>
+            <span class="metric-label">Total Tasks</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon active">
+            <i class="fa-regular fa-circle-dot"></i>
+          </div>
+          <div class="metric-content">
+            <span class="metric-value" id="stat-active">0</span>
+            <span class="metric-label">In Progress</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon completed">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <div class="metric-content">
+            <span class="metric-value" id="stat-completed">0</span>
+            <span class="metric-label">Completed</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon overdue">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <div class="metric-content">
+            <span class="metric-value" id="stat-overdue">0</span>
+            <span class="metric-label">Overdue</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace Grid -->
+    <main class="workspace-grid">
+      
+      <!-- Left Column: Creation Form -->
+      <section class="panel task-form-panel">
+        <div class="panel-header">
+          <h3><i class="fa-solid fa-plus-circle"></i> Create New Task</h3>
+          <span class="shortcut-badge">Press Enter to Add</span>
+        </div>
+
+        <form id="task-form" class="task-form" novalidate>
+          <div class="form-group">
+            <label for="task-title">Task Title <span class="required">*</span></label>
+            <input type="text" id="task-title" placeholder="e.g., Review PR #402 or Buy groceries" required autocomplete="off">
+          </div>
+
+          <div class="form-group">
+            <label for="task-desc">Description</label>
+            <textarea id="task-desc" rows="3" placeholder="Add additional details, links, or notes..."></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="task-category">Category</label>
+              <select id="task-category">
+                <option value="Personal">Personal</option>
+                <option value="College">College</option>
+                <option value="Coding">Coding</option>
+                <option value="Basketball">Basketball</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Health">Health</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="task-priority">Priority</label>
+              <select id="task-priority">
+                <option value="Low">Low</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="High">High</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="task-due-date">Due Date</label>
+            <input type="date" id="task-due-date">
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block" id="form-submit-btn">
+            <i class="fa-solid fa-plus"></i> Add Task
+          </button>
+        </form>
+      </section>
+
+      <!-- Right Column: Task List & Controls -->
+      <section class="panel task-list-panel">
+        
+        <!-- Controls: Search & Sort -->
+        <div class="controls-wrapper">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="search-input" placeholder="Search tasks... (Ctrl + /)">
+            <button id="clear-search-btn" class="clear-search-btn hidden" title="Clear Search">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <div class="sort-box">
+            <i class="fa-solid fa-arrow-down-short-wide sort-icon"></i>
+            <select id="sort-select">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="alphabetical">Alphabetical</option>
+              <option value="due-date">Due Date</option>
+              <option value="priority">Priority (High to Low)</option>
+              <option value="completed-first">Completed First</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="filter-chips" id="filter-chips">
+          <button class="chip active" data-filter="all">All</button>
+          <button class="chip" data-filter="active">Active</button>
+          <button class="chip" data-filter="completed">Completed</button>
+          <button class="chip" data-filter="today">Today</button>
+          <button class="chip" data-filter="overdue">Overdue</button>
+          <button class="chip" data-filter="high-priority">High Priority</button>
+        </div>
+
+        <!-- Dynamic Task List Container -->
+        <div class="task-list-wrapper">
+          <ul id="task-list" class="task-list"></ul>
+          
+          <!-- Empty State (Shown via JS when list is empty) -->
+          <div id="empty-state" class="empty-state hidden">
+            <div class="empty-emoji">🎉</div>
+            <h4 class="empty-title">Nothing scheduled today.</h4>
+            <p class="empty-desc">Enjoy your free time or add a new task to get started!</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Modal for Editing Tasks -->
+    <div id="edit-modal" class="modal-backdrop hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h4>Edit Task</h4>
+          <button id="close-modal-btn" class="btn-icon"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <form id="edit-task-form" class="task-form">
+          <input type="hidden" id="edit-task-id">
+          
+          <div class="form-group">
+            <label for="edit-task-title">Title</label>
+            <input type="text" id="edit-task-title" required>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-task-desc">Description</label>
+            <textarea id="edit-task-desc" rows="3"></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="edit-task-category">Category</label>
+              <select id="edit-task-category">
+                <option value="Personal">Personal</option>
+                <option value="College">College</option>
+                <option value="Coding">Coding</option>
+                <option value="Basketball">Basketball</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Health">Health</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-task-priority">Priority</label>
+              <select id="edit-task-priority">
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-task-due-date">Due Date</label>
+            <input type="date" id="edit-task-due-date">
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" id="cancel-edit-btn" class="btn btn-secondary">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
     </div>
 
-    <ul id="todo-list"></ul>
+    <!-- Canvas for Confetti -->
+    <canvas id="confetti-canvas"></canvas>
+
   </div>
 
   <script src="script.js"></script>
